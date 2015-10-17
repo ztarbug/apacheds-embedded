@@ -1,0 +1,73 @@
+version: 1
+
+dn: dc=starwit,dc=de
+objectclass: top
+objectclass: domain
+dc: starwit
+
+dn: ou=users,dc=starwit,dc=de
+objectClass: top
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=groups,dc=starwit,dc=de
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+dn: cn=backend_users,ou=groups,dc=starwit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: backend_users
+member: uid=be_user,ou=users,dc=starwit,dc=de
+description: List contains sample backend users
+
+dn: cn=frontend_users,ou=groups,dc=starwit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: frontend_users
+member: uid=fe_user,ou=users,dc=starwit,dc=de
+member: uid=be_user,ou=users,dc=starwit,dc=de
+member: uid=admin,ou=users,dc=starwit,dc=de
+description: List contains sample frontend users
+
+dn: cn=administrators,ou=groups,dc=starwit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: administrators
+member: uid=admin,ou=users,dc=starwit,dc=de
+description: List contains sample admin users
+
+dn: uid=admin,ou=users,dc=starwit,dc=de
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: admin
+sn: admin
+uid: admin
+userPassword:: e3NoYTUxMn14NjFFeTYxMktsMmdwRkw1NkZUOXdlRG5wU280QVY4ajgrcXgyQ
+ XVUSGRSeVkwMzZ4eHpUVHJ3MTBXcTMrNHFReUIrWFVSUFd4MU9OeHAzWTNwQjM3QT09
+
+dn: uid=be_user,ou=users,dc=starwit,dc=de
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: be_user
+sn: be_user
+uid: be_user
+userPassword:: e3NoYTUxMn1Lb1g3YXNCcW9NZkF4WTRlZHNOcTIzRlJHOW9jWGs5bzMzQkNme
+ m93UDYxS2JieHhqMStTcDBQcXhKS3hKKzU2MmRSZHUxQU1ZWUV6UnlPeE1JaWVSQT09
+
+dn: uid=fe_user,ou=users,dc=starwit,dc=de
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: fe_user
+sn: fe_user
+uid: fe_user
+userPassword:: e3NoYTUxMn1iYmtVeU5VVnN5T3F1eEFTc1hTWmE2ekFUQlNnNkt3bzBSMmhqV
+ 0dDc05HQ1FnekVKQ1ZiNWFRTzVERlI4YXN3T1Y1ZURNV3pycVE1Ylg5STErK0VOZz09
+
