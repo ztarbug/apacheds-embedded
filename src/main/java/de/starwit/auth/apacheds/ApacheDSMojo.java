@@ -30,7 +30,9 @@ public class ApacheDSMojo extends AbstractMojo {
 		File pidFile = new File(pidFileLocation);
 		try {
 			FileWriter out = new FileWriter(pidFile, false);
-			out.write(ManagementFactory.getRuntimeMXBean().getName());
+			// extract pid from result of MBean call
+			String pid = OperatingSystems.extractPID(ManagementFactory.getRuntimeMXBean().getName());
+			out.write(pid);
 			out.close();
 		} catch (IOException e) {
 			System.out.println("Could not write to pid file " + e.getMessage());
