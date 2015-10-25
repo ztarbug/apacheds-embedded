@@ -41,22 +41,24 @@ public class DirectoryRunner
 	private LdapServer ldapServer;
 	
 	private File workDir; 
-	
 	private String instancePath;
-	private String pathLdifFile;
+	
+	//File containing structure to import
+	private File ldifImportFile;
+	// root dn for imported structure
+	private String partitionDistinguishedName;
 	
 	private Log log;
 	
-	public DirectoryRunner(String instancePath, String pathLdifFile, Log log) {
+	public DirectoryRunner(String instancePath, File ldifImportFile, Log log) {
 		this.instancePath = instancePath;
-		this.pathLdifFile = pathLdifFile;
+		this.ldifImportFile = ldifImportFile;
 		this.log = log;
 	}
 	  
     public void runDirectory() throws Exception {
     	log.info("try building apacheds instance in " + instancePath);
     	workDir = new File(instancePath);
-    	log.info("check if instance path is existing: " + workDir.exists());
 		
     	try {
 			FileUtils.deleteDirectory(workDir);
@@ -67,7 +69,7 @@ public class DirectoryRunner
 
         directoryService = new DefaultDirectoryService();
         directoryService.setShutdownHookEnabled(true);
-        directoryService.setInstanceId("Starbuck's LDAP server");
+        directoryService.setInstanceId("Ztarbug's LDAP server");
         log.info("instance created ");
                
         ldapServer = new LdapServer();
@@ -104,6 +106,7 @@ public class DirectoryRunner
         directoryService.getChangeLog().setEnabled(true);
         directoryService.setDenormalizeOpAttrsEnabled(true);       
         
+        //creating config partition
         SingleFileLdifPartition configPartition = new SingleFileLdifPartition(directoryService.getSchemaManager(), directoryService.getDnFactory());
         configPartition.setId("config");
         configPartition.setPartitionPath(new File(directoryService.getInstanceLayout().getConfDirectory(), "config.ldif").toURI());
@@ -122,15 +125,16 @@ public class DirectoryRunner
         
         log.info("loading config partition ...");
         directoryService.addPartition(configPartition);
-        
-        log.info("loading starwit paritition...");
-        Partition myPartition = addPartition("starwit", "dc=starwit,dc=de", directoryService.getDnFactory());
-        directoryService.addPartition(myPartition);
+             
+        log.info("creating custom partition... " + partitionDistinguishedName);
+        if (partitionDistinguishedName != null) {
+        	Partition myPartition = addPartition("starwit", partitionDistinguishedName, directoryService.getDnFactory());
+        	directoryService.addPartition(myPartition);
+        }
                     
         directoryService.startup();
         ldapServer.start();
         
-        File ldifImportFile = new File(pathLdifFile);        
         LdifFileLoader loader = new LdifFileLoader(directoryService.getAdminSession(), ldifImportFile.getAbsolutePath());
         loader.execute();    	
     }
@@ -185,4 +189,12 @@ public class DirectoryRunner
         
         return partition;
     }
+
+	public String getPartitionDistinguishedName() {
+		return partitionDistinguishedName;
+	}
+
+	public void setPartitionDistinguishedName(String partitionDistinguishedName) {
+		this.partitionDistinguishedName = partitionDistinguishedName;
+	}
 }
